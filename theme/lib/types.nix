@@ -32,6 +32,7 @@ in {
       '';
       check = descAttr:
         all (val: any (l: val == l) labelList) (attrValues descAttr);
+      # Always ensures the defaultDescriptorAttrset exists
       merge = loc: defs:
         mergeAttrsList
         ([ defaultDescriptorAttrset ] ++ (map (v: v.value) defs));
