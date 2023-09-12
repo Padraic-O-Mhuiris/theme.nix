@@ -76,18 +76,6 @@ in rec {
     "violet"
   ];
 
-  # defaultDescriptors = {
-  #   foreground = "silver";
-  #   background = "black";
-  #   primary = "charcoal";
-  #   secondary = "slate";
-  #   accent = "white";
-  #   info = "blue";
-  #   success = "green";
-  #   warning = "yellow";
-  #   error = "red";
-  # };
-
   defaultDescriptors = [
     "foreground"
     "background"
