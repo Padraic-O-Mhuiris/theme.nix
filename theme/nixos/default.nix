@@ -26,7 +26,8 @@
     imports = [ ];
 
     options.theme = {
-      themes = mkThemeOptions { inherit (config.theme.settings) labels; };
+      themes =
+        mkThemeOptions { inherit (config.theme.settings) labels descriptors; };
       settings = {
         labels = mkOption {
           description = lib.mdDoc ''
@@ -48,7 +49,15 @@
             mkDescriptorAttrset (config.theme.settings.labels);
         in {
           type = descriptorAttrsetType;
-          description = lib.mdDoc "";
+          description = lib.mdDoc ''
+            Descriptors are signifiers of component labels which associate to a
+            certain label. Sensible defaults exist but can be extended and more
+            descriptors can be added by adding a descriptor - label pair as a
+            configuration type.
+
+            This object is then used to extend descriptors to the real
+            hexadecimal color values
+          '';
           default = descriptorAttrsetType.emptyValue;
         });
       };

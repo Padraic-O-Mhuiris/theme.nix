@@ -31,7 +31,7 @@ in {
           - More keys can be added
       '';
       check = descAttr:
-        all (val: any (l: val == l) labelList) (attrValues descAttrs);
+        all (val: any (l: val == l) labelList) (attrValues descAttr);
       merge = loc: defs:
         mergeAttrsList
         ([ defaultDescriptorAttrset ] ++ (map (v: v.value) defs));
