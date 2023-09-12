@@ -37,4 +37,5 @@ in {
     mergeAttrsList
     (map (theme: { "${theme}" = mkAllThemeOptions theme descriptors labels; })
       utils.themeNames);
+
 }

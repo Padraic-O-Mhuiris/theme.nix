@@ -1,6 +1,6 @@
 { inputs }:
 
-({ config, lib, pkgs, ... }:
+({ config, lib, pkgs, options, ... }:
 
   let
     inherit (pkgs) callPackage;
@@ -22,21 +22,19 @@
 
     inherit (themeLib.options) mkThemeOptions;
 
-    themes =
-      mkThemeOptions { inherit (config.theme.settings) labels descriptors; };
   in {
-
-    imports = [ ];
+    imports = [ ../../modules/i3.nix ];
 
     options.theme = {
-      schemes = themes; # TODO Make extensible
+      schemes =
+        mkThemeOptions { inherit (config.theme.settings) labels descriptors; };
 
       theme = mkOption {
         type = types.enum (attrNames config.theme.schemes);
         default = "nord";
       };
 
-      color = themes.${config.theme.theme};
+      colors = options.theme.schemes.${config.theme.theme};
 
       settings = {
         labels = mkOption {

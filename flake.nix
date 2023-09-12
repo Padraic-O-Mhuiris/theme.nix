@@ -32,7 +32,7 @@
 
         themeOpts = (inputs.nixpkgs.legacyPackages.x86_64-linux.nixos {
           imports = [ self.nixosModules.theme ];
-        }).options.theme.settings;
+        }).options.theme;
 
         inherit themeLib;
       };
