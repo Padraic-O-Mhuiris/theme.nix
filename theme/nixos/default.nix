@@ -21,13 +21,23 @@
     inherit (themeLib.types) mkDescriptorAttrset mkUniqueFixedLengthList;
 
     inherit (themeLib.options) mkThemeOptions;
+
+    themes =
+      mkThemeOptions { inherit (config.theme.settings) labels descriptors; };
   in {
 
     imports = [ ];
 
     options.theme = {
-      themes =
-        mkThemeOptions { inherit (config.theme.settings) labels descriptors; };
+      schemes = themes; # TODO Make extensible
+
+      theme = mkOption {
+        type = types.enum (attrNames config.theme.schemes);
+        default = "nord";
+      };
+
+      color = themes.${config.theme.theme};
+
       settings = {
         labels = mkOption {
           description = lib.mdDoc ''

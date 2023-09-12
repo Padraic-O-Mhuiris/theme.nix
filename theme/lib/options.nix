@@ -24,7 +24,13 @@ let
 
   mkAllThemeOptions = theme: descriptors: labels:
     (mkBase16ThemeOption theme)
-    // (mkThemeByDescriptorsAndLabelsOption theme descriptors labels);
+    // (mkThemeByDescriptorsAndLabelsOption theme descriptors labels) // {
+      name = mkOption {
+        type = types.str;
+        default = theme;
+        readOnly = true;
+      };
+    };
 
 in {
   mkThemeOptions = { labels, descriptors }:

@@ -81,7 +81,7 @@ in rec {
     "background"
     "primary"
     "secondary"
-    "accent"
+    "tertiary"
     "info"
     "success"
     "warning"
@@ -93,7 +93,7 @@ in rec {
     background = elemAt valueList 0; # black
     primary = elemAt valueList 1; # charcoal
     secondary = elemAt valueList 3; # slate
-    accent = elemAt valueList 7; # pearl
+    tertiary = elemAt valueList 15; # violet
     info = elemAt valueList 13; # blue
     success = elemAt valueList 11; # green
     warning = elemAt valueList 10; # yellow
