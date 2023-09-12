@@ -7,7 +7,7 @@
 
     inherit (lib)
       mapAttrsToList readDir removeSuffix mkOption types mkIf length
-      mkOptionType;
+      mkOptionType mapAttrs mkOptionDefault attrNames;
 
     cfg = config.theme;
 
@@ -15,14 +15,18 @@
       inherit (inputs) base16;
       inherit lib pkgs;
     };
+
+    inherit (themeLib.utils) defaultLabels;
+
+    inherit (themeLib.types) mkDescriptorAttrset mkUniqueFixedLengthList;
+
+    inherit (themeLib.options) mkThemeOptions;
   in {
 
     imports = [ ];
 
     options.theme = {
-      themes = themeLib.options.mkThemeOptions {
-        inherit (config.theme.settings) labels;
-      };
+      themes = mkThemeOptions { inherit (config.theme.settings) labels; };
       settings = {
         labels = mkOption {
           description = lib.mdDoc ''
@@ -35,9 +39,18 @@
 
             Must be of length 16
           '';
-          type = themeLib.types.labels;
-          default = themeLib.types.labels.emptyValue;
+          type = mkUniqueFixedLengthList 16;
+          default = defaultLabels;
         };
+
+        descriptors = mkOption (let
+          descriptorAttrsetType =
+            mkDescriptorAttrset (config.theme.settings.labels);
+        in {
+          type = descriptorAttrsetType;
+          description = lib.mdDoc "";
+          default = descriptorAttrsetType.emptyValue;
+        });
       };
     };
   })

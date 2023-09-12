@@ -11,6 +11,11 @@
       inherit (inputs.nixpkgs) lib;
       systems = lib.systems.flakeExposed;
 
+      themeLib = import ./theme/lib {
+        inherit (inputs) base16;
+        inherit lib;
+        pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
+      };
     in {
       debug = true;
       inherit systems;
@@ -24,6 +29,12 @@
             imports = [ self.nixosModules.theme ];
             config = cfg;
           }).config.theme;
+
+        themeOpts = (inputs.nixpkgs.legacyPackages.x86_64-linux.nixos {
+          imports = [ self.nixosModules.theme ];
+        }).options.theme.settings;
+
+        inherit themeLib;
       };
     });
 }

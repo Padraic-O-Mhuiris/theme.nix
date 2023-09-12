@@ -1,30 +1,40 @@
-{ lib }:
+{ lib, utils }:
 
-let inherit (lib) mkOptionType length unique;
+let
+  inherit (lib)
+    mkOptionType length unique mapAttrsToList all attrNames attrValues hasAttr
+    any isAttrs;
+
+  inherit (lib.attrsets) mergeAttrsList;
+
+  inherit (builtins) genList toString;
+
+  inherit (utils) mkDefaultDescriptorAttrset defaultDescriptors;
+
 in {
-  labels = mkOptionType {
-    name = "base16Labels";
-    description =
-      "Restricted list of 16 unique string descriptors used to more intuitively reference base16 colors";
-    descriptionClass = "composite";
-    emptyValue = [
-      "black"
-      "charcoal"
-      "graphite"
-      "slate"
-      "gray"
-      "silver"
-      "pearl"
-      "white"
-      "red"
-      "orange"
-      "yellow"
-      "green"
-      "aqua"
-      "blue"
-      "purple"
-      "violet"
-    ];
-    check = list: (length list) == 16 && (length (unique list)) == 16;
-  };
+  mkUniqueFixedLengthList = len:
+    mkOptionType {
+      name = "FiniteList${toString len}";
+      description = "List of length ${toString len} containing unique values";
+      check = list: length (unique list) == len;
+      emptyValue = genList (_: null) len;
+    };
+
+  mkDescriptorAttrset = labelList:
+    let defaultDescriptorAttrset = mkDefaultDescriptorAttrset labelList;
+    in mkOptionType {
+      name = "ConstrainedAttrset";
+      description = ''
+        Constrained Attrset:
+          - Will always contain at least ${toString defaultDescriptors} keys
+          - Only entries in valueList are valid attrset values
+          - More keys can be added
+      '';
+      check = descAttr:
+        all (val: any (l: val == l) labelList) (attrValues descAttrs);
+      merge = loc: defs:
+        mergeAttrsList
+        ([ defaultDescriptorAttrset ] ++ (map (v: v.value) defs));
+      emptyValue = defaultDescriptorAttrset;
+    };
 }

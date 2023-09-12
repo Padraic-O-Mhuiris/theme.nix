@@ -5,16 +5,24 @@ let
 
   inherit (lib.attrsets) mergeAttrsList;
 
-  mkBase16ThemeOption = theme:
-    mapAttrs (k: v:
-      mkOption {
-        type = types.str;
-        default = v;
-        readOnly = true;
-      }) (utils.themeAttrs theme);
+  mkThemeOption = label: color:
+    mkOption {
+      type = types.str;
+      default = color;
+      readOnly = true;
+    };
+
+  mkBase16ThemeOption = theme: mapAttrs mkThemeOption (utils.themeAttrs theme);
+
+  mkThemeByLabelsOption = theme: labels:
+    mapAttrs mkThemeOption (utils.themeByLabelsAttrs theme labels);
+
+  mkAllThemeOptions = theme: labels:
+    (mkBase16ThemeOption theme) // (mkThemeByLabelsOption theme labels);
 
 in {
   mkThemeOptions = { labels }:
     mergeAttrsList
-    (map (theme: { "${theme}" = mkBase16ThemeOption theme; }) utils.themeNames);
+    (map (theme: { "${theme}" = mkAllThemeOptions theme labels; })
+      utils.themeNames);
 }
