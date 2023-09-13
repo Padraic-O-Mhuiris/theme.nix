@@ -3,7 +3,7 @@
 let
   inherit (lib)
     mkOptionType length unique mapAttrsToList all attrNames attrValues hasAttr
-    any isAttrs;
+    any isAttrs types;
 
   inherit (lib.attrsets) mergeAttrsList;
 
@@ -12,7 +12,7 @@ let
   inherit (utils) mkDefaultDescriptorAttrset defaultDescriptors;
 
 in {
-  mkUniqueFixedLengthList = len:
+  mkUniqueFixedLengthListType = len:
     mkOptionType {
       name = "FiniteList${toString len}";
       description = "List of length ${toString len} containing unique values";
@@ -20,7 +20,7 @@ in {
       emptyValue = genList (_: null) len;
     };
 
-  mkDescriptorAttrset = labelList:
+  mkDescriptorAttrsetType = labelList:
     let defaultDescriptorAttrset = mkDefaultDescriptorAttrset labelList;
     in mkOptionType {
       name = "ConstrainedAttrset";
@@ -38,4 +38,5 @@ in {
         ([ defaultDescriptorAttrset ] ++ (map (v: v.value) defs));
       emptyValue = defaultDescriptorAttrset;
     };
+
 }

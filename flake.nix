@@ -7,34 +7,23 @@
   };
 
   outputs = { self, flake-parts, ... }@inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } (let
-      inherit (inputs.nixpkgs) lib;
-      systems = lib.systems.flakeExposed;
-
-      themeLib = import ./theme/lib {
-        inherit (inputs) base16;
-        inherit lib;
-        pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
-      };
-    in {
+    flake-parts.lib.mkFlake { inherit inputs; } {
       debug = true;
-      inherit systems;
+      systems = inputs.nixpkgs.lib.systems.flakeExposed;
       flake = {
-        nixosModules.theme = import ./theme/nixos { inherit inputs; };
+        nixosModules.theme = import ./theme { inherit inputs; };
 
         inherit inputs;
-        inherit lib;
+
         theme = cfg:
           (inputs.nixpkgs.legacyPackages.x86_64-linux.nixos {
             imports = [ self.nixosModules.theme ];
             config = cfg;
           }).config.theme;
 
-        themeOpts = (inputs.nixpkgs.legacyPackages.x86_64-linux.nixos {
-          imports = [ self.nixosModules.theme ];
-        }).options.theme;
-
-        inherit themeLib;
+        # themeOpts = (inputs.nixpkgs.legacyPackages.x86_64-linux.nixos {
+        #   imports = [ self.nixosModules.theme ];
+        # }).options.theme;
       };
-    });
+    };
 }
