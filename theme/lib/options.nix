@@ -2,7 +2,8 @@
 
 let
   inherit (lib)
-    mapAttrs mkOption attrNames removeSuffix mapAttrsToList mkEnableOption;
+    mapAttrs mkOption attrNames removeSuffix mapAttrsToList mkEnableOption
+    mdDoc;
 
   inherit (lib.attrsets) mergeAttrsList;
 
@@ -121,4 +122,5 @@ in rec {
       enable = mkEnableOption moduleName;
     } // (mkThemeCommonOptions { inherit theme globalTheme; }));
   };
+
 }

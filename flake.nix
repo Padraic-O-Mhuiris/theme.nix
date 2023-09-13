@@ -19,7 +19,7 @@
           (inputs.nixpkgs.legacyPackages.x86_64-linux.nixos {
             imports = [ self.nixosModules.theme ];
             config = cfg;
-          }).config.theme;
+          });
 
         # themeOpts = (inputs.nixpkgs.legacyPackages.x86_64-linux.nixos {
         #   imports = [ self.nixosModules.theme ];

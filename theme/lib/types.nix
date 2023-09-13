@@ -3,7 +3,7 @@
 let
   inherit (lib)
     mkOptionType length unique mapAttrsToList all attrNames attrValues hasAttr
-    any isAttrs types;
+    any isAttrs types mkOption mdDoc;
 
   inherit (lib.attrsets) mergeAttrsList;
 
@@ -39,4 +39,17 @@ in {
       emptyValue = defaultDescriptorAttrset;
     };
 
+  fontType = types.submodule {
+    options = {
+      package = mkOption {
+        description = mdDoc "Package providing the font.";
+        type = types.package;
+      };
+
+      name = mkOption {
+        description = mdDoc "Name of the font within the package.";
+        type = types.str;
+      };
+    };
+  };
 }
