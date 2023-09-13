@@ -102,15 +102,16 @@ in rec {
           else
             globalTheme.settings.descriptors;
         };
-      };
 
-      scheme = mkThemeSchemeOption {
-        inherit schemes;
-        default = if globalTheme == null then "nord" else globalTheme.scheme;
+        scheme = mkThemeSchemeOption {
+          inherit schemes;
+          default =
+            if globalTheme == null then "nord" else globalTheme.settings.scheme;
+        };
       };
 
       colors = mkThemeColorsOption {
-        inherit (theme) scheme;
+        inherit (theme.settings) scheme;
         inherit schemes;
       };
     };
