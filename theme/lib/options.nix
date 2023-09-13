@@ -1,9 +1,12 @@
 { lib, utils, types }:
 
 let
-  inherit (lib) mapAttrs mkOption attrNames;
+  inherit (lib)
+    mapAttrs mkOption attrNames removeSuffix mapAttrsToList mkEnableOption;
 
   inherit (lib.attrsets) mergeAttrsList;
+
+  inherit (builtins) readDir;
 
   mkThemeOption = label: color:
     mkOption {
@@ -80,7 +83,7 @@ let
       default = type.emptyValue // parentDescriptors;
     };
 
-in {
+in rec {
   # This function is used for defining the globalTheme and localTheme modules;
   mkThemeCommonOptions = { theme, globalTheme ? null }:
     let schemes = mkThemeSchemesOption { inherit (theme) settings; };
@@ -111,4 +114,10 @@ in {
         inherit schemes;
       };
     };
+
+  mkThemeModuleCommonOptions = { moduleName, theme, globalTheme ? null }: {
+    "${moduleName}" = ({
+      enable = mkEnableOption moduleName;
+    } // (mkThemeCommonOptions { inherit theme globalTheme; }));
+  };
 }
