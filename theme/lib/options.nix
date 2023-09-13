@@ -122,5 +122,4 @@ in rec {
       enable = mkEnableOption moduleName;
     } // (mkThemeCommonOptions { inherit theme globalTheme; }));
   };
-
 }

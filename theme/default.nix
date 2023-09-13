@@ -3,7 +3,7 @@
 { config, lib, theme, pkgs, options, ... }:
 
 {
-  imports = [ ./autoload.nix ];
+  imports = [ ./autoload.nix ./fonts.nix ];
 
   options.theme =
     config.lib.theme.mkThemeCommonOptions { inherit (config) theme; };

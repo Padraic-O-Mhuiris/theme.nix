@@ -7,6 +7,8 @@ let
 in {
   inherit (options) mkThemeCommonOptions mkThemeModuleCommonOptions;
 
+  inherit types;
+
   # mkTheme = { theme, modulesPath }:
   #   let
   #     moduleFiles = mapAttrsToList (k: v: k) (readDir modulesPath);
