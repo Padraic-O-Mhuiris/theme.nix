@@ -1,4 +1,6 @@
-{ lib, pkgs, base16 }:
+{ base16 }:
+
+{ lib, pkgs }:
 
 let
   types = import ./types.nix { inherit lib utils; };
