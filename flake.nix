@@ -17,13 +17,13 @@
       systems = inputs.nixpkgs.lib.systems.flakeExposed;
 
       perSystem = { config, lib, pkgs, inputs', ... }: {
-        devShells.default =
-          pkgs.mkShell { buildInputs = [ inputs'.nix-unit.packages.default ]; };
+        devShells.default = pkgs.mkShell {
+          buildInputs = [ inputs'.nix-unit.packages.default pkgs.reflex ];
+        };
 
-        packages.default = pkgs.writeShellScriptBin "test"
-          "${inputs'.nix-unit.packages.default}/bin/nix-unit --flake ${
-            ./.
-          }#tests";
+        packages.default = pkgs.writeShellScriptBin "test" ''
+          DFT_BACKGROUND=dark ${pkgs.reflex}/bin/reflex -r '\**/*.nix' -- ${inputs'.nix-unit.packages.default}/bin/nix-unit --flake .#tests --gc-roots-dir .nix-gc ;
+        '';
       };
 
       flake = {
@@ -36,14 +36,12 @@
           import ./theme/hm { inherit (self) themeLibFactory; };
 
         inherit inputs;
+        inherit (inputs.nixpkgs) lib;
 
         themeLibFactory = import ./lib { inherit (inputs) base16; };
 
         tests = import ./tests {
-          lib = inputs.nixpkgs.lib.extend (_: prev:
-            prev // {
-              theme = self.themeLibFactory { inherit (inputs) base16; };
-            });
+          inherit (inputs.nixpkgs) lib;
           nixosModule = self.nixosModules.theme;
           homeManagerModule = self.homeManagerModule.theme;
         };
